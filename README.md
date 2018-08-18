@@ -1,4 +1,4 @@
-# twork-pwa3
+# twork-pwa
 
 ## Project setup
 ```
