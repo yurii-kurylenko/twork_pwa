@@ -1,25 +1,51 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Layout from '@/core/components/Layout'
+import AppLayout from '@/core/components/AppLayout'
+import NotFound from '@/core/components/NotFound'
+
+import { HOME_ROUTES } from '@/modules/home/router'
+import { SIGN_ROUTES } from '@/modules/sign/router'
+import { TIMER_ROUTES } from '@/modules/timer/router'
+import { PROJECT_ROUTES } from '@/modules/projects/router'
+import { REPORT_ROUTES } from '@/modules/reports/router'
+
+import configs from '@/configs'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
+      path: '*',
+      component: NotFound,
+      redirect: 'timer'
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/',
+      component: Layout,
+      children: [
+        SIGN_ROUTES,
+        HOME_ROUTES
+      ]
+    },
+    {
+      path: '/apidoc',
+      redirect: () => { window.location.href = configs.apiDocUrl }
+    },
+    {
+      path: '/app',
+      name: 'app',
+      component: AppLayout,
+      children: [
+        HOME_ROUTES,
+        TIMER_ROUTES,
+        PROJECT_ROUTES,
+        REPORT_ROUTES
+      ]
     }
   ]
 })
+
+export default router

@@ -1,31 +1,53 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+  <v-app id="app">
     <router-view/>
-  </div>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default  {
 }
-#nav {
-  padding: 30px;
-}
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+<style lang="postcss">
+  h1, h2, h3, h4, h5, h6, p, ol, ul, li {
+    margin: 0;
+    padding: 0;
+  }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  ul,ol,li {
+    list-style-type: none;
+  }
+
+  button {
+    outline: none;
+    border: 0;
+    background: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  html {
+    height: 100%;
+    min-height: 100%;
+    height: auto !important;
+    background: #fff;
+    overflow-y: scroll;
+    overflow-x: auto;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    -webkit-text-size-adjust: none;
+    -webkit-overflow-scrolling: touch;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 </style>
