@@ -1,5 +1,13 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
-  // ...other vue-cli plugin options...
+  configureWebpack: {
+    plugins: [
+      new CopyWebpackPlugin([{
+        from: 'node_modules/idb/lib/idb.js',
+        to: 'js/idb.js'
+      }])
+    ]
+  },
   pwa: {
     name: 'My App',
     themeColor: '#4DBA87',
@@ -12,5 +20,5 @@ module.exports = {
     workboxOptions: {
       swSrc: 'src/service-worker.js',
     }
-  }
+  },
 }

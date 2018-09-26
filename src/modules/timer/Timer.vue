@@ -1,7 +1,7 @@
 <template>
   <v-layout row wrap>
-    <v-flex lg12 pb-3> <TrackingBar/></v-flex>
-    <v-flex lg12> <TimerList/></v-flex>
+    <v-flex lg12 pa-1> <TrackingBar/></v-flex>
+    <v-flex lg12 pa-1> <TimerList/></v-flex>
   </v-layout>
 </template>
 
@@ -18,11 +18,13 @@
     },
     methods: {
       ...mapActions({
-        fetchTimeEntries: 'timers/fetchTimeEntries'
+        fetchTimeEntries: 'timers/fetchTimeEntries',
+        fetchProjects: 'projects/fetchProjects'
       })
     },
     created() {
-      this.fetchTimeEntries()
+      this.fetchTimeEntries();
+      this.fetchProjects();
     },
   }
 </script>

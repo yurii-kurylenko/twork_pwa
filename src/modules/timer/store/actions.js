@@ -1,9 +1,9 @@
 import * as _         from "lodash";
 import {
   SET_TIME_ENTRIES,
-  UPDATE,
-  DELETE,
-  ADD
+  UPDATE_TIME_ENTRY,
+  DELETE_TIME_ENTRY,
+  ADD_TIME_ENTRY
 } from "./types";
 
 export const TIME_ENTIRIES_ENDPOINT = "users/me/time_entries";
@@ -22,16 +22,16 @@ export default {
       workspaceId: rootGetters["auth/currentWorkspaceId"]
     });
     let data = await timeEntryApiService.post(newTimeEntry);
-    commit(ADD, data);
+    commit(ADD_TIME_ENTRY, data);
   },
 
   async updateTimeEntry({commit}, timeEntry) {
     const data = await timeEntryApiService.put(timeEntry.id, timeEntry);
-    commit(UPDATE, data);
+    commit(UPDATE_TIME_ENTRY, data);
   },
   async deleteTimeEntry(context, timeEntryId) {
     await timeEntryApiService.delete(timeEntryId);
-    context.commit(DELETE, timeEntryId);
+    context.commit(DELETE_TIME_ENTRY, timeEntryId);
   },
   async partialUpdate({state, dispatch}, object) {
     const timeEntry = _.find(state.timeEntries, { id: object.id });

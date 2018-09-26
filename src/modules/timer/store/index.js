@@ -1,8 +1,8 @@
 import {
   SET_TIME_ENTRIES,
-  UPDATE,
-  DELETE,
-  ADD
+  UPDATE_TIME_ENTRY,
+  DELETE_TIME_ENTRY,
+  ADD_TIME_ENTRY
 } from "./types";
 
 import actions from './actions';
@@ -18,14 +18,14 @@ const mutations = {
   [SET_TIME_ENTRIES](state, timeEntries) {
     state.timeEntries = timeEntries;
   },
-  [ADD] (state, timeEntry) {
+  [ADD_TIME_ENTRY](state, timeEntry) {
     state.timeEntries.unshift(timeEntry);
   },
-  [UPDATE] (state, timeEntry) {
+  [UPDATE_TIME_ENTRY](state, timeEntry) {
     const index = _.findIndex(state.timeEntries, { id: timeEntry.id });
     state.timeEntries.splice(index, 1, timeEntry);
   },
-  [DELETE] (state, timeEntryId) {
+  [DELETE_TIME_ENTRY](state, timeEntryId) {
     const index = _.findIndex(state.timeEntries, {
       id: timeEntryId
     });
@@ -36,7 +36,7 @@ const mutations = {
 
 const getters = {
   timeEntries() {
-    if (state.timeEntries == null) { return null };
+    if (state.timeEntries == null) { return null }
     return _.map(state.timeEntries, timeEntry => new TimeEntry(timeEntry));
   },
   stoppedTimeEntries(state) {

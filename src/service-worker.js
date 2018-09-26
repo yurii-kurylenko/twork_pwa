@@ -1,3 +1,15 @@
+self.importScripts('/js/idb.js');
+
+self.workbox.precaching.precacheAndRoute(self.__precacheManifest);
+
+let dbPromise = self.indexedDB.open('time-entries-store', 1, (db) => {
+  if (!db.objectStoreNames.contains('time-entries')) {
+    db.createObjectStore('time-entries', {
+      keyPath: 'id'
+    });
+  }
+})
+
 // Cache google fonts
 self.workbox.routing.registerRoute(
   new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
@@ -33,12 +45,12 @@ self.workbox.routing.registerRoute(
 );
 
 // Cache css/js
-self.workbox.routing.registerRoute(
-  /\.(?:js|css|html)$/,
-  self.workbox.strategies.staleWhileRevalidate({
-    cacheName: 'static-resources',
-  }),
-);
+// self.workbox.routing.registerRoute(
+//   /\.(?:js|css|html)$/,
+//   self.workbox.strategies.staleWhileRevalidate({
+//     cacheName: 'static-resources',
+//   }),
+// );
 
 // Fallback to cache for API XHR
 self.workbox.routing.registerRoute(
@@ -54,3 +66,4 @@ self.workbox.routing.registerRoute(
     ],
   }),
 );
+

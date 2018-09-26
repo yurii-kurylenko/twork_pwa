@@ -3,23 +3,24 @@
     <v-flex lg12>
       <v-card class="timer">
         <v-layout row wrap>
-          <v-flex lg7 md12 xs12 pa-2>
+          <v-flex lg7 md6 xs12 pa-2>
             <v-text-field
               :value="activeTimeEntry.description"
               placeholder="Your task description goes here"
               ref="descriptionInput"
-              @keyup.enter.prevent="submitDescription()"
+              @input="changeDescription"
+              @keyup.enter.prevent="onDescriptionSubmit()"
             >
             </v-text-field>
           </v-flex>
           <v-flex lg2 md6 xs12 pa-2>
-            <TimerProjectSelect :initialProject="getProject()" @projectChanged="onProjectChanged" />
+            <TimerProjectSelect :initialProject="activeTimeEntry.projectId" @projectChanged="onProjectChanged" />
           </v-flex>
           <v-flex lg-3 pa-2>
             <v-layout>
               <v-flex lg2 pt-2>
                 <BillableButton
-                  :initialBillableState="getBillableState()"
+                  :initialBillableState="activeTimeEntry.billable"
                   v-on:billableChanged="onBillableStateChanged"
                 />
               </v-flex>
@@ -30,16 +31,16 @@
               </v-flex>
               <v-flex lg3>
                 <div>
-                  <v-btn v-if="!isTimerStarted()" fab dark color="teal" v-on:click="start()">
+                  <v-btn v-if="!isTimerStarted" fab dark color="teal" v-on:click="onStartButtonClick">
                     <v-icon dark>play_arrow</v-icon>
                   </v-btn>
-                  <v-btn v-if="isTimerStarted()" fab dark color="pink" v-on:click="toggleTimeEntry()">
+                  <v-btn v-if="isTimerStarted" fab dark color="pink" v-on:click="onStopButtonClick">
                     <v-icon dark>stop</v-icon>
                   </v-btn>
                 </div>
               </v-flex>
               <v-flex lg1 pt-2 pl-3>
-                <v-btn flat icon color="grey"><v-icon>delete</v-icon></v-btn>
+                <v-btn flat icon color="grey" v-on:click="deleteActiveTimer"><v-icon>delete</v-icon></v-btn>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -54,7 +55,7 @@
   import TrackingBarTimer from "./TrackingBarTimer";
   import BillableButton from './../shared/BillableButton';
   import DateTimeRangePicker from './../shared/DateTimeRangePicker';
-  import { mapGetters, mapActions, mapState } from "vuex";
+  import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
   import Trash from "@/assets/trash.svg";
 
   export default {
@@ -68,84 +69,67 @@
     data() {
       return {
         localBillable: null,
-        localProjectId: null
+        localProjectId: null,
       }
     },
     computed: {
       ...mapGetters({
         'activeTimeEntry': 'timers/activeTimeEntry'
-      })
+      }),
+      isTimerStarted: function() { return this.activeTimeEntry && this.activeTimeEntry.startedAt }
     },
     methods: {
-      ...mapActions({
-        changeDescription: "timers/changeDescription",
-        changeProject: "timers/changeProject",
-        stopTimeEntry: "timers/stopTimeEntry",
-        changeBillable: "timers/changeBillable",
-        deleteTimeEntry: "timers/deleteTimeEntry",
-        createTimeEntry: "timers/createTimeEntry",
-        updateTimeEntry: "timers/updateTimeEntry"
+      ...mapMutations({
+        updateTimeEntryOnlyLocaly: 'timers/updateTimeEntry'
       }),
-      toggleTimeEntry() {
-        if (this.isTimerStarted()) {
-          this.stopTimeEntry({id: this.activeTimeEntry.id, description: this.getCurrentDescripton()})
+      ...mapActions({
+        deleteTimeEntry: "timers/deleteTimeEntry",
+        start: "timers/createTimeEntry",
+        updateTimeEntryOnServer: "timers/updateTimeEntry"
+      }),
+      updateTimeEntry(updatedTimeEntry) {
+        if (this.isTimerStarted) {
+          this.updateTimeEntryOnServer(updatedTimeEntry)
         } else {
-          this.start();
-        };
-      },
-      submitDescription () {
-        if (this.isTimerStarted()) {
-          this.changeDescription({id: this.activeTimeEntry.id, description: this.getCurrentDescripton()})
-        } else {
-          this.start()
+          this.updateTimeEntryOnlyLocaly(updatedTimeEntry);
         }
+      },
+      changeDescription(description) {
+        const updatedTimeEntry = { ...this.activeTimeEntry, description: description };
+        this.updateTimeEntry(updatedTimeEntry)
+      },
+      onDescriptionSubmit () {
+        if (!this.isTimerStarted) {
+          const updatedTimeEntry = { ...this.activeTimeEntry, startedAt: new Date().toISOString() }
+          this.start(updatedTimeEntry);
+        }
+      },
+      onProjectChanged(projectId) {
+        const updatedTimeEntry = { ...this.activeTimeEntry, projectId: projectId }
+        this.updateTimeEntry(updatedTimeEntry);
       },
       onBillableStateChanged(isBillable) {
-        this.localBillable = isBillable;
-        if (this.isTimerStarted()) {
-          this.changeBillable({ id: this.activeTimeEntry.id, billable: this.localBillable });
-        }
-      },
-      onProjectChanged(newProject) {
-        this.localProjectId = newProject;
-        if (this.isTimerStarted()) {
-          this.changeProject({id: this.activeTimeEntry.id, projectId: this.localProjectId});
-        }
-      },
-      getBillableState() {
-        return this.localBillable || this.activeTimeEntry.billable
-      },
-      getProject() {
-        return this.localProjectId || this.activeTimeEntry.projectId
+        const updatedTimeEntry = { ...this.activeTimeEntry, billable: isBillable }
+        this.updateTimeEntry(updatedTimeEntry);
       },
       onTimeRangeChanged({startedAt, endedAt}) {
-        if (!this.isTimerStarted()) {
-          this.createTimeEntry({
-            description: this.getCurrentDescripton(),
-            billable: this.getBillableState(),
-            startedAt: startedAt,
-            stoppedAt: endedAt
-          })
+        const updatedTimeEntry = { ...this.activeTimeEntry, startedAt: startedAt, stoppedAt: endedAt };
+        if (this.isTimerStarted) {
+          this.updateTimeEntry(updatedTimeEntry)
         } else {
-          this.updateTimeEntry({id:  this.activeTimeEntry.id, startedAt: startedAt})
+          this.start(updatedTimeEntry)
         }
       },
-      start() {
-        this.createTimeEntry({
-          description: this.getCurrentDescripton(),
-          billable: this.getBillableState(),
-          startedAt: new Date().toISOString(),
-          projectId: this.getProject()
-        })
+      onStartButtonClick () {
+         const updatedTimeEntry = { ...this.activeTimeEntry, startedAt: new Date().toISOString() }
+        this.start(updatedTimeEntry);
       },
-      getCurrentDescripton() {
-        return this.$refs.descriptionInput.value;
+      onStopButtonClick() {
+        const updatedTimeEntry = { ...this.activeTimeEntry, stoppedAt: new Date().toISOString() }
+        this.updateTimeEntry(updatedTimeEntry);
       },
-      destroyActiveTimer() {
+      deleteActiveTimer() {
         this.deleteTimeEntry(this.activeTimeEntry.id)
-      },
-      isTimerStarted() {
-        return !!this.activeTimeEntry.startedAt;
       }
     }
   }
