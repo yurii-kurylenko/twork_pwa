@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Layout from '@/core/components/Layout'
 import AppLayout from '@/core/components/AppLayout'
 import NotFound from '@/core/components/NotFound'
+import requireAuth from "@/core/services/requireAuth";
 
 import { HOME_ROUTES } from '@/modules/home/router'
 import { SIGN_ROUTES } from '@/modules/sign/router'
@@ -38,6 +39,7 @@ const router = new Router({
       path: '/app',
       name: 'app',
       component: AppLayout,
+      beforeEnter: requireAuth,
       children: [
         HOME_ROUTES,
         TIMER_MOBILE_ROUTES,

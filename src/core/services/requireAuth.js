@@ -1,6 +1,8 @@
 import userAuthService from './userAuthService';
 
 const requireAuth = async (to, from, next) => {
+  console.log('Auth checked!');
+
   try {
     if (userAuthService.currentUser) {
       return next();

@@ -1,7 +1,8 @@
 import moment from "moment";
-/* eslint-disable rule */
+
+// eslint-disable-next-line no-unused-vars
 import * as moment_format from "moment-duration-format";
-/* eslint-enable rule */
+
 
 export default class TimeEntry {
   static buildEmpty() {

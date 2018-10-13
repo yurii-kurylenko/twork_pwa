@@ -1,26 +1,33 @@
 <template>
-    <v-layout row>
-    <v-flex xs12 sm6 offset-sm3>
-      <v-card>
-        <div v-for="(timeEntries, date) in timeEntryGroups" :key="date">
-          <TimeEntryGroup two-line subheader :timeEntriesDate="date" :timeEntries="timeEntries"> </TimeEntryGroup>
-          <v-divider></v-divider>
-        </div>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <v-flex xs12 sm6 offset-sm3>
+    <v-card>
+      <div v-for="(timeEntries, date) in timeEntryGroups" :key="date">
+        <TimerListGroup two-line subheader :timeEntriesDate="date" :timeEntries="timeEntries"> </TimerListGroup>
+        <v-divider></v-divider>
+      </div>
+      <v-btn
+            color="pink"
+            dark
+            fixed
+            bottom
+            right
+            fab
+          >
+            <v-icon>add</v-icon>
+        </v-btn>
+    </v-card>
+  </v-flex>
 </template>
 
 <script>
   import { mapActions, mapGetters } from "vuex";
   import addToHomeScreen from "@/core/services/addToHomeScreen";
   import subscriptionsManager from  "@/core/services/subscriptionsManager";
-  import TimeEntryGroup from "./TimeEntryGroup";
+  import TimerListGroup from "./timer-list/TimerListGroup";
 
   export default {
-    name: 'Timer',
     components: {
-      TimeEntryGroup
+      TimerListGroup
     },
     data: () => {
       return {

@@ -136,7 +136,7 @@ class TworkIndexedDBStore {
 class ApiService {
   constructor(resourceName) {
     this.resourceName = resourceName;
-    this.basePath = 'http://localhost:3000/api/v1' + resourceName;
+    this.basePath = 'https://twork-api.herokuapp.com/api/v1' + resourceName;
   }
 
   async get() {

@@ -2,7 +2,7 @@
   <v-list two-line subheader>
     <v-subheader>{{ timeEntriesDate }}</v-subheader>
     <template v-for="(timeEntry, index) in timeEntries" class="time-entry">
-      <TimeEntryItem :timeEntry="timeEntry" :key="timeEntry.id"></TimeEntryItem>
+      <TimerListItem :timeEntry="timeEntry" :key="timeEntry.id"></TimerListItem>
       <v-divider
         v-if="index + 1 < timeEntries.length"
         :key="index"
@@ -12,10 +12,10 @@
 </template>
 
 <script>
-  import TimeEntryItem from "./TimeEntryItem";
+  import TimerListItem from "./TimerListItem";
   export default {
     components: {
-      TimeEntryItem
+      TimerListItem
     },
     props: [
       'timeEntriesDate',

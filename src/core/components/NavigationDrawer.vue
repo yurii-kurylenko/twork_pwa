@@ -46,7 +46,7 @@
         isMini: false,
         drawer: true,
         navigation: [
-          { title: "Timer", ico: "alarm", route: "timer"},
+          { title: "Timer", ico: "alarm", route: "timer-list"},
           { title: "Projects", ico: "work", route: "projects"},
           { title: "Reports", ico: "assessment", route: "reports"}
         ]

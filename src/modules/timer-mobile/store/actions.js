@@ -1,4 +1,4 @@
-import * as _         from "lodash";
+import * as _ from "lodash";
 import userAuthService from '@/core/services/userAuthService';
 import {
   SET_TIME_ENTRIES,
