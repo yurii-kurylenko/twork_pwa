@@ -39,8 +39,8 @@
           let entryStartOfDay = this.$moment(timeEntry.startedAt).clone().startOf("day").format("ddd, D MMM");
           let todayStartOfDay = this.$moment().startOf("day").format("ddd, D MMM");
           let yesterdayStartOfDay = this.$moment().subtract(1, "day").startOf("day").format("ddd, D MMM");
-          if (entryStartOfDay == todayStartOfDay) { return "Today" };
-          if (entryStartOfDay == yesterdayStartOfDay) { return "Yesterday" };
+          if (entryStartOfDay == todayStartOfDay) { return "Today" }
+          if (entryStartOfDay == yesterdayStartOfDay) { return "Yesterday" }
           return this.$moment(timeEntry.startedAt).format("ddd, D MMM");
         });
       }

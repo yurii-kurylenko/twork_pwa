@@ -6,27 +6,27 @@
     <div class="sign__content">
       <p class="sign__title">Be more effective today!</p>
       <div class="sign__form">
-        <router-link class="sign__button sign__button--icon" to="signin" v-if="!userLoggedIn">
+        <router-link class="sign__button sign__button--icon" to="signin" v-if="!isUserLoggedIn">
           <svg class="sign__icon">
             <use xlink:href="#google"></use>
           </svg>
           Login with google
         </router-link>
-        <router-link class="sign__button" to="timer" v-if="userLoggedIn">Go to timer</router-link>
+        <router-link class="sign__button" to="timer" v-if="isUserLoggedIn">Go to timer</router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from "vuex";
-  import Google from "@/assets/google.svg";
+  import userAuthService from "@/core/services/userAuthService";
+
   export default {
     name: "Home",
-    computed: {
-      ...mapGetters({
-        "userLoggedIn": "auth/userLoggedIn"
-      })
+    data: function () {
+      return {
+        isUserLoggedIn: !!userAuthService.currentUser
+      }
     }
   }
 </script>

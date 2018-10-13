@@ -8,7 +8,7 @@
               :value="activeTimeEntry.description"
               placeholder="Your task description goes here"
               ref="descriptionInput"
-              @input="changeDescription"
+              @blur="changeDescription"
               @keyup.enter.prevent="onDescriptionSubmit()"
             >
             </v-text-field>
@@ -55,8 +55,11 @@
   import TrackingBarTimer from "./TrackingBarTimer";
   import BillableButton from './../shared/BillableButton';
   import DateTimeRangePicker from './../shared/DateTimeRangePicker';
-  import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
-  import Trash from "@/assets/trash.svg";
+  import { mapGetters, mapActions, mapMutations } from "vuex";
+  /* eslint-disable */
+    import Trash from "@/assets/trash.svg";
+  /* eslint-enable */
+
 
   export default {
     name: 'TrackingBar',
@@ -94,8 +97,8 @@
           this.updateTimeEntryOnlyLocaly(updatedTimeEntry);
         }
       },
-      changeDescription(description) {
-        const updatedTimeEntry = { ...this.activeTimeEntry, description: description };
+      changeDescription(event) {
+        const updatedTimeEntry = { ...this.activeTimeEntry, description: event.target.value };
         this.updateTimeEntry(updatedTimeEntry)
       },
       onDescriptionSubmit () {

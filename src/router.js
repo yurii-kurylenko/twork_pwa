@@ -6,7 +6,7 @@ import NotFound from '@/core/components/NotFound'
 
 import { HOME_ROUTES } from '@/modules/home/router'
 import { SIGN_ROUTES } from '@/modules/sign/router'
-import { TIMER_ROUTES } from '@/modules/timer/router'
+import { TIMER_MOBILE_ROUTES } from '@/modules/timer-mobile/router'
 import { PROJECT_ROUTES } from '@/modules/projects/router'
 import { REPORT_ROUTES } from '@/modules/reports/router'
 
@@ -40,7 +40,7 @@ const router = new Router({
       component: AppLayout,
       children: [
         HOME_ROUTES,
-        TIMER_ROUTES,
+        TIMER_MOBILE_ROUTES,
         PROJECT_ROUTES,
         REPORT_ROUTES
       ]

@@ -1,6 +1,11 @@
 <template>
   <v-layout row wrap pa-2>
-    <v-flex lg7>
+    <v-flex xs1>
+      <v-btn flat icon color="pink" v-if="timeEntry.unsynced">
+        <v-icon>cached</v-icon>
+      </v-btn>
+    </v-flex>
+    <v-flex lg6>
       <TimerItemDescription
           :initialDescription="timeEntry.description"
           v-on:descriptionChanged="onDescriptionChanged"
@@ -35,7 +40,7 @@
           <v-btn flat icon color="teal"><v-icon>play_arrow</v-icon></v-btn>
         </v-flex>
         <v-flex lg1>
-          <v-btn flat icon color="grey"><v-icon>delete</v-icon></v-btn>
+          <v-btn flat icon color="grey" @click="destroy(timeEntry.id)"><v-icon>delete</v-icon></v-btn>
         </v-flex>
       </v-layout>
     </v-flex>
@@ -67,29 +72,26 @@
     },
     methods: {
       ...mapActions({
-        changeDuration: 'timers/changeDuration',
         deleteTimeEntry: 'timers/deleteTimeEntry',
-        changeDescription: 'timers/changeDescription',
-        changeProject: 'timers/changeProject',
-        changeBillable: 'timers/changeBillable'
+        updateTimeEntry: "timers/updateTimeEntry"
       }),
       destroy(timeEntryId) { this.deleteTimeEntry(timeEntryId) },
       toggleClass() {
         this.menuIsActive = !this.menuIsActive;
       },
       onDescriptionChanged(newDescription) {
-        if (this.timeEntry.description == newDescription) { return };
-        this.changeDescription({id: this.timeEntry.id, description: newDescription});
+        if (this.timeEntry.description == newDescription) { return }
+        this.updateTimeEntry({...this.timeEntry, description: newDescription});
       },
       onTimeRangeChanged({endedAt, startedAt}) {
-        this.changeDuration({ id: this.timeEntry.id, startedAt: startedAt, stoppedAt: endedAt});
+        this.updateTimeEntry({...this.timeEntry, startedAt: startedAt, stoppedAt: endedAt});
       },
       onBillableStateChanged(newBillableState) {
-        if (this.timeEntry.billable == newBillableState) { return };
-        this.changeBillable({id: this.timeEntry.id, billable: newBillableState});
+        if (this.timeEntry.billable == newBillableState) { return }
+        this.updateTimeEntry({...this.timeEntry.id, billable: newBillableState });
       },
       onProjectChanged(newProject) {
-        this.changeProject({id: this.timeEntry.id, projectId: newProject});
+        this.updateTimeEntry({...this.timeEntry, projectId: newProject});
       }
     },
     computed: {

@@ -3,11 +3,16 @@
 </template>
 
 <script>
+  import userAuthService from '@/core/services/userAuthService';
+
   export default {
     mounted() {
       const token = this.$route.query.token;
-      this.$store.dispatch("auth/login", token);
-      this.$router.push({name: "timer"});
+      console.log(userAuthService);
+
+      userAuthService.setToken(token).then( () => {
+        userAuthService.fetchUser().then(()=> this.$router.push({name: "timer"}))
+      })
     }
   }
 </script>

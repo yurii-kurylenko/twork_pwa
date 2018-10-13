@@ -1,5 +1,6 @@
-import configs from "../../configs";
+import configs from "@/configs";
 import fetch from "isomorphic-fetch";
+import keyValStore from './keyValStore';
 
 export default class ApiService {
     constructor(resourceName) {
@@ -9,7 +10,8 @@ export default class ApiService {
 
     async get() {
       try {
-        const resp = await fetch(this.basePath, { headers: this.requestHeaders() });
+        const headers = await this.requestHeaders();
+        const resp = await fetch(this.basePath, { headers: headers });
         return await resp.json();
       } catch (error) {
         console.log(error);
@@ -18,14 +20,16 @@ export default class ApiService {
 
     async post(params = {}) {
       try {
+        const headers = await this.requestHeaders();
         const resp = await fetch(
           this.basePath, {
             method: 'POST',
             body: JSON.stringify(params),
-            headers: this.requestHeaders()
+            headers: headers
           }
         );
-        return await resp.json();
+        const data = await resp.json();
+        return data;
       } catch (error) {
         console.log(error);
       }
@@ -33,14 +37,16 @@ export default class ApiService {
 
     async put(id, params = {}) {
       try {
+        const headers = await this.requestHeaders();
         const resp = await fetch(
           this.basePath + '/' + id, {
             method: 'PUT',
             body: JSON.stringify(params),
-            headers: this.requestHeaders()
+            headers: headers
           }
         );
-        return await resp.json();
+        const data = await resp.json();
+        return data;
       } catch (error) {
         console.log(error);
       }
@@ -48,23 +54,26 @@ export default class ApiService {
 
     async delete(id, params = {}) {
       try {
+        const headers = await this.requestHeaders();
         const resp = await fetch(
           this.basePath + '/' + id,
           {
             method: 'DELETE',
             body: JSON.stringify(params),
-            headers: this.requestHeaders()
+            headers: headers
           }
         );
-        return await resp.json();
+        const data = await resp.json();
+        return data;
       } catch (error) {
         console.log(error);
       }
     }
 
-    requestHeaders() {
+    async requestHeaders() {
+      const token = await keyValStore.get('auth-token');
       return {
-        'Authorization': `JWT ${localStorage.getItem('token')}`,
+        'Authorization': `JWT ${token}`,
         'Content-Type': 'application/json',
       }
     }

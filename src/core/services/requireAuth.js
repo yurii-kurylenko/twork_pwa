@@ -1,11 +1,21 @@
-import store from "@/store";
+import userAuthService from './userAuthService';
 
-const requireAuth = (to, from, next) => {
-  if (!store.getters["auth/userLoggedIn"]) {
-    next("/sign/in");
-  }
-  else {
-    next()
+const requireAuth = async (to, from, next) => {
+  try {
+    if (userAuthService.currentUser) {
+      return next();
+    } else {
+      const token = await userAuthService.getToken();
+      if (token) {
+        await userAuthService.fetchUser();
+        return next()
+      } else {
+        return next("/sign/in");
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return next("/sign/in");
   }
 };
 

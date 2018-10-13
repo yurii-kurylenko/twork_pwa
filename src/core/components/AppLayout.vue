@@ -14,15 +14,10 @@
 
 <script>
   import NavigationDrawer from './NavigationDrawer';
-  import store from "@/store";
 
   export default {
     components: {
       NavigationDrawer
-    },
-    async beforeRouteEnter (to, from, next) {
-      await store.dispatch("auth/fetchCurrentUser");
-      next();
     }
   };
 </script>

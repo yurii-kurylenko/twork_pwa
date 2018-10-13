@@ -2,10 +2,20 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   configureWebpack: {
     plugins: [
-      new CopyWebpackPlugin([{
-        from: 'node_modules/idb/lib/idb.js',
-        to: 'js/idb.js'
-      }])
+      new CopyWebpackPlugin([
+        {
+          from: 'src/sw/idb.js',
+          to: 'js/idb.js'
+        },
+        {
+          from: 'src/sw/sw-background-sync.js',
+          to: 'js/sw-background-sync.js'
+        },
+        {
+          from: 'src/sw/sw-push.js',
+          to: 'js/sw-push.js'
+        }
+      ])
     ]
   },
   pwa: {
@@ -15,10 +25,10 @@ module.exports = {
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
     debug: true,
-    // configure the workbox plugin
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: 'src/service-worker.js',
+      importScripts: ['js/idb.js', 'js/sw-background-sync.js', 'js/sw-push.js']
     }
   },
 }

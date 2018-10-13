@@ -35,23 +35,19 @@
 </template>
 
 <script>
-  import { mapGetters } from "vuex";
+  import userAuthService from "@/core/services/userAuthService";
+
   export default  {
     name: "Profile",
     data: function () {
       return {
-        isProfileMenuOpened: false
+        isProfileMenuOpened: false,
+        user: userAuthService.currentUser
       }
-    },
-    computed: {
-      ...mapGetters({
-        user: "auth/currentUser"
-      })
     },
     methods: {
       logout() {
-        this.$store.dispatch("auth/logout");
-        this.$router.push({name: "home"});
+        userAuthService.logout().then(() => this.$router.push({name: "home"}));
       }
     },
   }

@@ -1,7 +1,5 @@
 import * as _ from "lodash";
 import Vue from "vue";
-import * as moment from "moment";
-import { SET_STOPPED_TIMERS } from "../../timer/store/types";
 
 export const SET_USERS = "SET_USERS";
 export const SET_FILTER = "SET_FILTER";

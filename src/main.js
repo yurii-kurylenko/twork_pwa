@@ -16,9 +16,10 @@ import {
   storePlugin
 } from './plugins'
 
-import configs from './configs'
-import setupHttpInterceptors from './interceptors'
-import clickOutsideDirective from './core/directives/clickOutside'
+import configs from './configs';
+import setupHttpInterceptors from './interceptors';
+import clickOutsideDirective from './core/directives/clickOutside';
+
 
 Vue.use(Vuetify)
 Vue.use(VueAxios, axios)
@@ -35,8 +36,20 @@ Vue.axios.defaults.baseURL = configs.apiUrl
 
 Vue.config.productionTip = false
 
+import TworkIndexedDBStore from '@/core/services/TworkIndexedDBStore';
+import addToHomeScreen from '@/core/services/addToHomeScreen';
+
+const afterVueAppCreated = async () => {
+  addToHomeScreen.initBeforeInstallPromptListener();
+  if ('indexedDB' in window) {
+    await TworkIndexedDBStore.initStores();
+  }
+  return true
+}
+
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  created: afterVueAppCreated
 }).$mount('#app')

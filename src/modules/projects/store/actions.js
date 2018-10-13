@@ -6,6 +6,7 @@ import {
 } from "./types";
 
 import ApiService from "@/core/services/ApiService";
+import userAuthService from '@/core/services/userAuthService';
 
 const projectsApiService = new ApiService("/users/me/projects");
 
@@ -15,22 +16,22 @@ export default {
     context.commit(SET_PROJECTS, projects);
   },
 
-  async destroy(context, projectId) {
+  async deleteProject(context, projectId) {
     const data = await projectsApiService.delete(
       projectId,
-      { workspaceId: context.rootGetters["auth/currentWorkspaceId"] }
+      { workspaceId: userAuthService.getCurrentWorkspaceId() }
     )
     context.commit(DELETE, data.id);
   },
 
-  async create(context, projectParams) {
-    projectParams.workspaceId = context.rootGetters["auth/currentWorkspaceId"];
-    const data = await projectsApiService.post(projectParams)
+  async createProject(context, project) {
+    const projectWithWorkspace = { ...project, workspaceId: userAuthService.getCurrentWorkspaceId() }
+    const data = await projectsApiService.post(projectWithWorkspace)
     context.commit(ADD, data);
   },
 
-  async update(context, { id, newName }) {
-    const data = projectsApiService.put(id, { name: newName })
+  async updateProject(context, project) {
+    const data = await projectsApiService.put(project.id, project)
     context.commit(UPDATE, data);
   }
 }
