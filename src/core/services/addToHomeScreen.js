@@ -7,8 +7,8 @@ class AddToHomeScreen {
     console.log('Lister to beforeInstallPrompt');
 
     window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
       this.deferredPrompt = e;
+      e.preventDefault();
     });
   }
 
